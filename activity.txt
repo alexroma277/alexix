@@ -1,0 +1,36 @@
+name: Daily Activity Bot
+
+on:
+  schedule:
+    # Запуск кожні 4 години (можна змінити під себе)
+    - cron: '0 */4 * * *'
+  workflow_dispatch: # Дозволяє запускати вручну для перевірки
+
+jobs:
+  make-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Random Delay and Decision
+        run: |
+          # Генеруємо випадкову затримку до 60 хвилин, щоб не було чіткого графіку
+          sleep $((RANDOM % 3600))
+          
+          # Шанс 70%, що коміт відбудеться (щоб були "пропуски" як у людини)
+          if [ $((RANDOM % 10)) -lt 3 ]; then
+            echo "Сьогодні відпочиваємо від комітів."
+            exit 0
+          fi
+
+          # Оновлюємо файл часом останньої активності
+          echo "Останнє оновлення: $(date)" > activity.txt
+
+          # Налаштування локального користувача для коміту
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          git add activity.txt
+          git commit -m "docs: update activity logs [skip ci]"
+          git push
