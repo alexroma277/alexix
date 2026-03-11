@@ -1,9 +1,9 @@
-name: Daily Activity Bot
+name: Activ Bot
 
 on:
   schedule:
     # Запуск кожні 4 години (можна змінити під себе)
-    - cron: '10 */6 * * *'
+    - cron: '16 */8 * * *'
   workflow_dispatch: # Дозволяє запускати вручну для перевірки
 
 jobs:
